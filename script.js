@@ -1,17 +1,15 @@
-function createGrid (totalRows, totalColumns) { 
-    totalRows = 16;
-    totalColumns = 16;
+function createGrid (index) { 
     const main = document.querySelector("main");
     const gridContainer = document.createElement("div");
     gridContainer.classList.add("gridContainer");
     main.appendChild(gridContainer);
 
-    for (let numOfRows = 0; numOfRows < totalRows; numOfRows++) {
+    for (let numOfRows = 0; numOfRows < index; numOfRows++) {
         const newRow = document.createElement("div");
         newRow.classList.add("row");
         gridContainer.appendChild(newRow);
 
-        for (let numOfColumns = 0; numOfColumns < totalColumns; numOfColumns++) {
+        for (let numOfColumns = 0; numOfColumns < index; numOfColumns++) {
             const newColumn = document.createElement("div");
             newColumn.classList.add("column");
             newRow.appendChild(newColumn);
@@ -24,6 +22,16 @@ function createGrid (totalRows, totalColumns) {
     main.appendChild(reset);
 }
 
+function deleteGrid () {
+    const gridContainer = document.querySelector(".gridContainer");
+    const main = document.querySelector("main");
+    const reset = document.querySelector(".reset");
+
+    main.removeChild(gridContainer);
+    main.removeChild(reset);
+    
+}
+
 function colorGrid (event) {
     event.target.style.backgroundColor = "black";
 
@@ -33,17 +41,44 @@ function clearGrid (event) {
     const columns = document.querySelectorAll(".column");
     for (let column of columns) {
         console.log(column);
-        column.style.backgroundColor = "white";
+        column.style.backgroundColor = "transparent";
     }
-
 }
 
-createGrid();
+function findIndex(event) {
+    updateSliderValue(event.target.value);
+    deleteGrid();
+    createGrid(event.target.value);
+
+    const columns = document.querySelectorAll(".column");
+    columns.forEach(hover);
+
+    const reset = document.querySelector(".reset");
+    reset.addEventListener("click", clearGrid);
+}
+
+function updateSliderValue (index) {
+    const sliderValue = document.querySelector("#sliderValue");
+    sliderValue.textContent = `${index} x ${index}`;
+}
+
 function hover (event) {
     event.addEventListener("mouseover", colorGrid);
 }
-const columns = document.querySelectorAll(".column");
-columns.forEach(hover);
-const reset = document.querySelector(".reset");
-reset.addEventListener("click", clearGrid);
+
+function initialise() {
+    createGrid(16);
+    const columns = document.querySelectorAll(".column");
+    columns.forEach(hover);
+
+    const reset = document.querySelector(".reset");
+    reset.addEventListener("click", clearGrid);
+
+    const slider = document.querySelector("#slider");
+    slider.addEventListener("input", findIndex);
+}
+
+initialise();
+
+
 
