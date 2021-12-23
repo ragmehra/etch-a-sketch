@@ -35,17 +35,19 @@ function deleteGrid () {
 }
 
 function colorGridBlack (event) {
+    if (event.buttons > 0) {
     event.target.style.backgroundColor = "black";
     event.target.style.opacity = Math.random();
+    }
 
 }
 
 function colorGridRainbow (event) {
+    if (event.buttons > 0) {
     event.target.style.backgroundColor =  `rgba(${Math.floor(Math.random() * 255)},
         ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 
         ${Math.random()})`;
-
-    console.log(event.target.style.backgroundColor);
+    }
         
 }
 
@@ -74,10 +76,10 @@ function removeColorListeners() {
     const columns = document.querySelectorAll(".column");
     for(let column of columns) {
         if (mode === colorGridRainbow) {
-        column.removeEventListener("mouseover", colorGridRainbow)
+        column.removeEventListener("mouseenter", colorGridRainbow)
         }
         else if (mode === colorGridBlack) {
-            column.removeEventListener("mouseover", colorGridBlack);
+            column.removeEventListener("mouseenter", colorGridBlack);
         }
     }
 }
@@ -88,7 +90,7 @@ function updateSliderValue (index) {
 }
 
 function hover (event) {
-    event.addEventListener("mouseover", mode);
+    event.addEventListener("mouseenter", mode);
 }
 
 function setupModes() {
@@ -101,7 +103,7 @@ function setupModes() {
         if (mode !== colorGridBlack) {
             mode = colorGridBlack;
             columns.forEach((column) => {
-                column.removeEventListener("mouseover", colorGridRainbow);
+                column.removeEventListener("mouseenter", colorGridRainbow);
             })
             columns.forEach(hover);
             console.log(mode);
@@ -114,7 +116,7 @@ function setupModes() {
         if (mode !== colorGridRainbow) {
             mode = colorGridRainbow;
             columns.forEach((column) => {
-                column.removeEventListener("mouseover", colorGridBlack);
+                column.removeEventListener("mouseenter", colorGridBlack);
             })
             columns.forEach(hover);
             console.log(mode);
