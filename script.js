@@ -1,4 +1,4 @@
-let mode = colorGridBlack;
+let mode;
 
 function createGrid (index) { 
     const main = document.querySelector("main");
@@ -59,14 +59,27 @@ function clearGrid (event) {
 
 function updateGrid(event) {
     updateSliderValue(event.target.value);
+    removeColorListeners();
     deleteGrid();
     createGrid(event.target.value);
 
-    const columns = document.querySelectorAll(".column");
-    columns.forEach(hover);
+    mode = null;
 
     const reset = document.querySelector(".reset");
     reset.addEventListener("click", clearGrid);
+
+}
+
+function removeColorListeners() {
+    const columns = document.querySelectorAll(".column");
+    for(let column of columns) {
+        if (mode === colorGridRainbow) {
+        column.removeEventListener("mouseover", colorGridRainbow)
+        }
+        else if (mode === colorGridBlack) {
+            column.removeEventListener("mouseover", colorGridBlack);
+        }
+    }
 }
 
 function updateSliderValue (index) {
@@ -78,22 +91,14 @@ function hover (event) {
     event.addEventListener("mouseover", mode);
 }
 
-function initialise() {
-    createGrid(16);
-    const columns = document.querySelectorAll(".column");
-    columns.forEach(hover);
-
-    const reset = document.querySelector(".reset");
-    reset.addEventListener("click", clearGrid);
-
-    const slider = document.querySelector("#slider");
-    slider.addEventListener("input", updateGrid);
-
+function setupModes() {
+    
     const monotoneButton = document.querySelector("#monotone");
     const rainbowButton = document.querySelector("#rainbow");
 
     monotoneButton.addEventListener("click", () => {
-        if (mode === colorGridRainbow) {
+        const columns = document.querySelectorAll(".column");
+        if (mode !== colorGridBlack) {
             mode = colorGridBlack;
             columns.forEach((column) => {
                 column.removeEventListener("mouseover", colorGridRainbow);
@@ -105,7 +110,8 @@ function initialise() {
     });
 
     rainbowButton.addEventListener("click", () => {
-        if (mode === colorGridBlack) {
+        const columns = document.querySelectorAll(".column");
+        if (mode !== colorGridRainbow) {
             mode = colorGridRainbow;
             columns.forEach((column) => {
                 column.removeEventListener("mouseover", colorGridBlack);
@@ -115,6 +121,21 @@ function initialise() {
         }
         
     });
+}
+
+function initialise() {
+    createGrid(16);
+    const columns = document.querySelectorAll(".column");
+    //columns.forEach(hover);
+
+    const reset = document.querySelector(".reset");
+    reset.addEventListener("click", clearGrid);
+
+    const slider = document.querySelector("#slider");
+    slider.addEventListener("input", updateGrid);
+
+    setupModes();
+    
 }
 
 initialise();
