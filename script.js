@@ -1,3 +1,5 @@
+let mode = colorGridBlack;
+
 function createGrid (index) { 
     const main = document.querySelector("main");
     const gridContainer = document.createElement("div");
@@ -32,20 +34,30 @@ function deleteGrid () {
     
 }
 
-function colorGrid (event) {
+function colorGridBlack (event) {
     event.target.style.backgroundColor = "black";
+    event.target.style.opacity = Math.random();
 
+}
+
+function colorGridRainbow (event) {
+    event.target.style.backgroundColor =  `rgba(${Math.floor(Math.random() * 255)},
+        ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 
+        ${Math.random()})`;
+
+    console.log(event.target.style.backgroundColor);
+        
 }
 
 function clearGrid (event) {
     const columns = document.querySelectorAll(".column");
     for (let column of columns) {
-        console.log(column);
         column.style.backgroundColor = "transparent";
+        column.style.opacity = 1;
     }
 }
 
-function findIndex(event) {
+function updateGrid(event) {
     updateSliderValue(event.target.value);
     deleteGrid();
     createGrid(event.target.value);
@@ -63,7 +75,7 @@ function updateSliderValue (index) {
 }
 
 function hover (event) {
-    event.addEventListener("mouseover", colorGrid);
+    event.addEventListener("mouseover", mode);
 }
 
 function initialise() {
@@ -75,7 +87,34 @@ function initialise() {
     reset.addEventListener("click", clearGrid);
 
     const slider = document.querySelector("#slider");
-    slider.addEventListener("input", findIndex);
+    slider.addEventListener("input", updateGrid);
+
+    const monotoneButton = document.querySelector("#monotone");
+    const rainbowButton = document.querySelector("#rainbow");
+
+    monotoneButton.addEventListener("click", () => {
+        if (mode === colorGridRainbow) {
+            mode = colorGridBlack;
+            columns.forEach((column) => {
+                column.removeEventListener("mouseover", colorGridRainbow);
+            })
+            columns.forEach(hover);
+            console.log(mode);
+        }
+        
+    });
+
+    rainbowButton.addEventListener("click", () => {
+        if (mode === colorGridBlack) {
+            mode = colorGridRainbow;
+            columns.forEach((column) => {
+                column.removeEventListener("mouseover", colorGridBlack);
+            })
+            columns.forEach(hover);
+            console.log(mode);
+        }
+        
+    });
 }
 
 initialise();
